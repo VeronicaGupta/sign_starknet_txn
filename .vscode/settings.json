@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.table": "c",
+        "secp256k1.h": "c"
+    }
+}
