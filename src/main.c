@@ -14,19 +14,16 @@ int main() {
     uint8_t public_key[pubkey_len];
     uint8_t private_key[privkey_len];
 
-    // Constants for HD path
-    #define PURPOSE     0x80000A55  // 2645
-    #define LAYER       0xA2862AD3  // 579218131 Starknet
-    #define APPLICATION 0xD30829B6
-    #define ETH_ADDRESS 0x00000000
+    // Constants for HD path m / purpose' / coin_type' / account' / change / address_index
+    #define PURPOSE     0x8000002C  // 44
+    #define COIN_TYPE   0x8000232C  // 9004 Starknet
+    #define ACCOUNT     0x80000000
+    #define CHANGE      0x80000000
     #define ADDRESS_IDX 0x00000000
 
-    get_keys(mnemonic, passphrase, public_key, private_key, pubkey_len, privkey_len, PURPOSE, LAYER, APPLICATION, ETH_ADDRESS, ADDRESS_IDX);   
+    get_keys(mnemonic, passphrase, public_key, private_key, pubkey_len, privkey_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX);   
     print_arr("master public key", public_key, pubkey_len); // of the input address of the unsigned txn
     print_arr("master private key", private_key, privkey_len); // of the input address of the unsigned txn
-
-    uint8_t address[60];
-    address_from_pubkey()
 
     // ***************when coins in account****************************//
 
@@ -37,7 +34,7 @@ int main() {
     // uint8_t unsigned_txn[unsigned_txn_len]; 
     // print_hexarr("unsigned txn", unsigned_txn_hex, unsigned_txn_len, unsigned_txn);
 
-    // // when unsigned txn hex is unavailable
+    // // when unsigned txn details are available
     // uint8_t unsigned_txn[200];
     // int unsigned_txn_len = generate_unsigned_txn(public_key, pubkey_len, unsigned_txn);
     // print_arr("unsigned txn", unsigned_txn, unsigned_txn_len);
@@ -99,7 +96,7 @@ int main() {
     // print_arr("derived uncom pubkey hash", pubkey_hash, SHA3_256_DIGEST_LENGTH);
     // printf("\nderived m4460000 addr[%d bytes]: %s\n",ethereum_address_len,  ethereum_address);
 
-    curve_parameters();
+    // curve_parameters();
     
     return 0;
 }

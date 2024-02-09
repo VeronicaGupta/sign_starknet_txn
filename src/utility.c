@@ -221,7 +221,11 @@ void get_keys(const char *mnemonic, const char *passphrase, uint8_t* public_key,
     // node_details(node); 
 
     memcpy(public_key, node.public_key, publickey_len);
-    memcpy(private_key, node.private_key, privkey_len);    
+    memcpy(private_key, node.private_key, privkey_len);   
+
+    // uint8_t address[33];
+    // hdnode_get_address_raw(&node, 2, address);
+    // print_arr("master address", address, privkey_len); // input address of the unsigned txn 
 }
 int compare_keys(char* name, uint8_t* key1, const char* key2, size_t size){
     uint8_t key2_arr[size];

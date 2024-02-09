@@ -1,0 +1,17 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "create_argent_acc.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "abi-wan-kanabi": "^2.2.0",
+    "starknet": "^5.24.3",
+    "ts-node": "^10.9.2"
+  }
+}
