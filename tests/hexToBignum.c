@@ -43,5 +43,6 @@ int main() {
     bignum256 result;
     hex_to_bignum(hex_str, &result);
     print_bignum(&result);
+
     return 0;
 }

@@ -21,6 +21,56 @@ const char* data = "80"; // 0.02 ETH
 const int chain_id = 11155111; // sepolia
 const char* chain_id_hex = "aa36a7"; // sepolia
 
+void curve_parameters(){
+    char *obj_hex_org;
+    bignum256 obj_bn_org;
+    
+    // scep256k1 curve
+    obj_hex_org = "fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f"; // prime match
+    obj_bn_org = (bignum256){0x1ffffc2f, 0x1ffffff7, 0x1fffffff, 0x1fffffff, 0x1fffffff, 0x1fffffff, 0x1fffffff, 0x1fffffff, 0xffffff};
+    
+    obj_hex_org = "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798"; // Gx match  
+    obj_bn_org = (bignum256){0x16f81798, 0x0f940ad8, 0x138a3656, 0x17f9b65b, 0x10b07029, 0x114ae743, 0x0eb15681, 0x0fdf3b97, 0x79be66};
+    bn_check_hex(obj_hex_org, obj_bn_org);
+
+    obj_hex_org = "483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8"; // Gy match
+    obj_bn_org = (bignum256){0x1b10d4b8, 0x023e847f, 0x01550667, 0x0f68914d, 0x108a8fd1, 0x1dfe0708, 0x11957693, 0x0ee4d478, 0x483ada};
+    bn_check_hex(obj_hex_org, obj_bn_org);
+
+    obj_hex_org = "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141"; // n match
+    obj_bn_org = (bignum256){0x10364141, 0x1e92f466, 0x12280eef, 0x1db9cd5e, 0x1fffebaa, 0x1fffffff, 0x1fffffff, 0x1fffffff, 0xffffff};
+    bn_check_hex(obj_hex_org, obj_bn_org);    
+
+    obj_hex_org = "9d671cd581c69bc5e697f5e45bcd07c6741496c20e7cf878896cf21467d7d140"; // Hn not match (trezor: 9d671cd581c69bc5e697f5e45bcd07c6741496c20e7cf879dfe92f46681b20a0)
+    obj_bn_org = (bignum256){0x081b20a0, 0x1f497a33, 0x09140777, 0x0edce6af, 0x1ffff5d5, 0x1fffffff, 0x1fffffff, 0x1fffffff, 0x7fffff};
+    bn_check_hex(obj_hex_org, obj_bn_org);
+
+    // starknet curve
+    obj_hex_org = "0800000000000011000000000000000000000000000000000000000000000001"; // prime match
+    obj_bn_org = (bignum256){0x00000001, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00440000, 0x00000000, 0x080000};
+    bn_check_hex(obj_hex_org, obj_bn_org);
+
+    obj_hex_org = "06f21413efbe40de150e596d72f7a8c5609ad26c15c915c1f4cdfcb99cee9e89"; // b match
+    obj_bn_org = (bignum256){0x1cee9e89, 0x066fe5cc, 0x1245707d, 0x15a4d82b, 0x1a8c5609, 0x0cb6b97b, 0x03785439, 0x027df7c8, 0x06f214};
+    bn_check_hex(obj_hex_org, obj_bn_org);
+    
+    obj_hex_org = "01ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca"; // Gx match  
+    obj_bn_org = (bignum256){0x0943cfca, 0x0b91ec5e, 0x0606780f, 0x19fb361a, 0x0f0c7dea, 0x16a0ad20, 0x1c6defb3, 0x1830b332, 0x01ef15};
+    bn_check_hex(obj_hex_org, obj_bn_org);
+
+    obj_hex_org = "005668060aa49730b7be4801df46ec62de53ecd11abe43a32873000c36e8dc1f"; // Gy match
+    obj_bn_org = (bignum256){0x16e8dc1f, 0x03980061, 0x0f90e8ca, 0x07d9a235, 0x0ec62de5, 0x0400efa3, 0x1cc2def9, 0x00c15492, 0x005668};
+    bn_check_hex(obj_hex_org, obj_bn_org);
+
+    obj_hex_org = "0800000000000010ffffffffffffffffb781126dcae7b2321e66a241adc64d2f"; // n match
+    obj_bn_org = (bignum256){0x0dc64d2f, 0x1335120d, 0x19ec8c87, 0x0224db95, 0x1ffffb78, 0x1fffffff, 0x0043ffff, 0x00000000, 0x080000};    
+    bn_check_hex(obj_hex_org, obj_bn_org);
+
+    obj_hex_org = "07d9e57c2333766ebaf0ab4cf78bbabb509cf64d14ce60b96021b3f1ea1c688d"; // Hn match
+    obj_bn_org = (bignum256){0x0a1c688d, 0x010d9f8f, 0x13982e58, 0x19ec9a29, 0x1babb509, 0x15a67bc5, 0x19baebc2, 0x0f84666e, 0x07d9e5};
+    bn_check_hex(obj_hex_org, obj_bn_org);
+}
+
 uint8_t* rlp(int data_size, const char* data_hex, uint8_t* packet){
     uint8_t* data = hexToUint8(data_hex);
 

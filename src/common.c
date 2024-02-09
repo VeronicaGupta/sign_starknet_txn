@@ -35,10 +35,10 @@ char* intToHex(int value) {
 }
 
 char* print_arr(char* name, uint8_t* bytearray, size_t size){
-    char bytearray_hex[size*2+1];
+    char* bytearray_hex = malloc((2 * size + 1) * sizeof(char));
     if (debug == true){        
         uint8ToHexString(bytearray, size, bytearray_hex);
-        printf("\n%s[%d bytes]: %s\n", name, (strlen(bytearray_hex)/2), bytearray_hex);
+        printf("\n%s[%dB]: %s\n", name, (strlen(bytearray_hex)/2), bytearray_hex);
     }
     return bytearray_hex;
 }
@@ -54,4 +54,36 @@ uint8_t* print_hexarr(char* name, const char *hexString, size_t size, uint8_t* b
     // print_arr(name, bytearray, size);
 
     return bytearray;
+}
+
+void print_bignum(char* name, const bignum256 *obj_bn) {
+    printf("\n%s {", name);
+    for (int i = 0; i < BN_LIMBS - 1; i++) {
+        printf("0x%08x, ", obj_bn->val[i]);
+    }
+    printf("0x%06x}\n", obj_bn->val[BN_LIMBS - 1]);
+
+}
+
+void bn_check_hex (char *obj_hex_org, bignum256 obj_bn_org){
+        size_t obj_len = strlen(obj_hex_org) / 2;
+    uint8_t obj[obj_len];
+    memcpy(obj, hexToUint8(obj_hex_org), obj_len);
+
+    bignum256 obj_bn[9];
+
+    memzero(obj_bn, 9);
+    bn_read_be(obj, obj_bn);
+    // memcpy(obj_bn, obj_bn_org, 9); // to check the difference
+
+    print_bignum("obj_bn org", &obj_bn_org);
+    print_bignum("obj_bn cal", obj_bn);
+    printf("\nobj_bn  verified: %d\n", memcmp(&obj_bn_org, obj_bn, obj_len));
+
+    memzero(obj, obj_len);
+    bn_write_be(obj_bn, obj);
+
+    printf("\nobj_hex org[%dB]: %s\n", strlen(obj_hex_org)/2, obj_hex_org);
+    char *cal_obj_hex = print_arr("obj_hex cal", obj, obj_len);
+    printf("\nobj_hex verified: %d\n", strcmp(obj_hex_org, cal_obj_hex));
 }
