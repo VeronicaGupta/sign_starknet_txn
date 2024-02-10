@@ -66,7 +66,7 @@ void print_bignum(char* name, const bignum256 *obj_bn) {
 }
 
 void bn_check_hex (char *obj_hex_org, bignum256 obj_bn_org){
-        size_t obj_len = strlen(obj_hex_org) / 2;
+    size_t obj_len = strlen(obj_hex_org) / 2;
     uint8_t obj[obj_len];
     memcpy(obj, hexToUint8(obj_hex_org), obj_len);
 

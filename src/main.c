@@ -18,7 +18,7 @@ int main() {
     #define PURPOSE     0x8000002C  // 44
     #define COIN_TYPE   0x8000232C  // 9004 Starknet
     #define ACCOUNT     0x80000000
-    #define CHANGE      0x80000000
+    #define CHANGE      0x00000000
     #define ADDRESS_IDX 0x00000000
 
     get_keys(mnemonic, passphrase, public_key, private_key, pubkey_len, privkey_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX);   
@@ -72,6 +72,8 @@ int main() {
     // uint8_t signed_txn[120];
     // generate_signed_txn(unsigned_txn, v, r, s, unsigned_txn_len, signed_txn);
 
+    // print_hexarr("public key", "032a382eb01b1558e75a35fb44ca48223b48ca05029b5690219cb057ab5d188d", 32, public_key);
+
     // // get uncompressed public key from the original seed
     // const int pubkey_uncompressed_len = 65;
     // uint8_t pubkey_uncompressed[pubkey_uncompressed_len];
@@ -79,18 +81,18 @@ int main() {
     // ecdsa_uncompress_pubkey(&secp256k1, public_key, pubkey_uncompressed);
     // print_arr("m4460000 uncom public key", pubkey_uncompressed, pubkey_uncompressed_len);
 
-    // // verify public key from sig and digest
-    // memzero(pubkey_uncompressed, pubkey_uncompressed_len);
-    // ecdsa_recover_pub_from_sig(&secp256k1, pubkey_uncompressed, sig, unsigned_txn_hash, recid);
-    // print_arr("derived uncom public key", pubkey_uncompressed, pubkey_uncompressed_len);
-
-    // const int ethereum_address_len = 64;
-    // char ethereum_address[ethereum_address_len];
-    // memzero(ethereum_address, ethereum_address_len);
+    // // // verify public key from sig and digest
+    // // memzero(pubkey_uncompressed, pubkey_uncompressed_len);
+    // // ecdsa_recover_pub_from_sig(&secp256k1, pubkey_uncompressed, sig, unsigned_txn_hash, recid);
+    // // print_arr("derived uncom public key", pubkey_uncompressed, pubkey_uncompressed_len);
 
     // // verify address from the derived public key
     // uint8_t pubkey_hash[SHA3_256_DIGEST_LENGTH];
-    // keccak_256(&pubkey_uncompressed[1], pubkey_uncompressed_len-1, pubkey_hash);       
+    // keccak_256(&pubkey_uncompressed[1], pubkey_uncompressed_len-1, pubkey_hash);
+
+    // const int ethereum_address_len = 64;
+    // char ethereum_address[ethereum_address_len];
+    // memzero(ethereum_address, ethereum_address_len);       
     // ethereum_address_checksum(&pubkey_hash[12], ethereum_address, false, 1);
 
     // print_arr("derived uncom pubkey hash", pubkey_hash, SHA3_256_DIGEST_LENGTH);

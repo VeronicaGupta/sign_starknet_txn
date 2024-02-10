@@ -46,19 +46,19 @@ void curve_parameters(){
     bn_check_hex(obj_hex_org, obj_bn_org);
 
     // starknet curve
-    obj_hex_org = "0800000000000011000000000000000000000000000000000000000000000001"; // prime match
+    obj_hex_org = "0800000000000011000000000000000000000000000000000000000000000001"; // prime match decimal(3618502788666131213697322783095070105623107215331596699973092056135872020481)
     obj_bn_org = (bignum256){0x00000001, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00440000, 0x00000000, 0x080000};
     bn_check_hex(obj_hex_org, obj_bn_org);
 
-    obj_hex_org = "06f21413efbe40de150e596d72f7a8c5609ad26c15c915c1f4cdfcb99cee9e89"; // b match
+    obj_hex_org = "06f21413efbe40de150e596d72f7a8c5609ad26c15c915c1f4cdfcb99cee9e89"; // b match decimal(3141592653589793238462643383279502884197169399375105820974944592307816406665)
     obj_bn_org = (bignum256){0x1cee9e89, 0x066fe5cc, 0x1245707d, 0x15a4d82b, 0x1a8c5609, 0x0cb6b97b, 0x03785439, 0x027df7c8, 0x06f214};
     bn_check_hex(obj_hex_org, obj_bn_org);
     
-    obj_hex_org = "01ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca"; // Gx match  
+    obj_hex_org = "01ef15c18599971b7beced415a40f0c7deacfd9b0d1819e03d723d8bc943cfca"; // Gx match decimal(874739451078007766457464989774322083649278607533249481151382481072868806602)
     obj_bn_org = (bignum256){0x0943cfca, 0x0b91ec5e, 0x0606780f, 0x19fb361a, 0x0f0c7dea, 0x16a0ad20, 0x1c6defb3, 0x1830b332, 0x01ef15};
     bn_check_hex(obj_hex_org, obj_bn_org);
 
-    obj_hex_org = "005668060aa49730b7be4801df46ec62de53ecd11abe43a32873000c36e8dc1f"; // Gy match
+    obj_hex_org = "005668060aa49730b7be4801df46ec62de53ecd11abe43a32873000c36e8dc1f"; // Gy match decimal(152666792071518830868575557812948353041420400780739481342941381225525861407)
     obj_bn_org = (bignum256){0x16e8dc1f, 0x03980061, 0x0f90e8ca, 0x07d9a235, 0x0ec62de5, 0x0400efa3, 0x1cc2def9, 0x00c15492, 0x005668};
     bn_check_hex(obj_hex_org, obj_bn_org);
 
@@ -69,6 +69,70 @@ void curve_parameters(){
     obj_hex_org = "07d9e57c2333766ebaf0ab4cf78bbabb509cf64d14ce60b96021b3f1ea1c688d"; // Hn match
     obj_bn_org = (bignum256){0x0a1c688d, 0x010d9f8f, 0x13982e58, 0x19ec9a29, 0x1babb509, 0x15a67bc5, 0x19baebc2, 0x0f84666e, 0x07d9e5};
     bn_check_hex(obj_hex_org, obj_bn_org);
+}
+
+void get_keys(const char *mnemonic, const char *passphrase, uint8_t* public_key, uint8_t* private_key,
+                size_t publickey_len, size_t privkey_len, uint32_t purpose, uint32_t coin_type, 
+                uint32_t account, uint32_t change, uint32_t address_idx) {
+    uint8_t seed[64];
+    mnemonic_to_seed(mnemonic, passphrase, seed, 0);
+    compare_keys("Seed", seed, vseed, 64);
+    print_arr("seed", seed, 64);
+
+    HDNode node;
+    hdnode_from_seed(seed, 64, "secp256k1", &node);
+    hdnode_fill_public_key(&node);
+    compare_keys("Master_pubkey", node.public_key, m_pubkey, publickey_len);
+    compare_keys("Master_chaincode", node.chain_code, m_chaincode, privkey_len); 
+    node_details(node);    
+
+    hdnode_private_ckd(&node, purpose);
+    hdnode_fill_public_key(&node); 
+    compare_keys("M44_pubkey", node.public_key, m44_pubkey, publickey_len);
+    // node_details(node); 
+
+    hdnode_private_ckd(&node, coin_type);
+    hdnode_fill_public_key(&node);
+    compare_keys("M4460_pubkey", node.public_key, m4460_pubkey, publickey_len);
+    // node_details(node); 
+
+    hdnode_private_ckd(&node, account);
+    hdnode_fill_public_key(&node);
+    compare_keys("M44600_pubkey", node.public_key, m44600_pubkey, publickey_len);
+    // node_details(node); 
+
+    hdnode_private_ckd(&node, change);
+    hdnode_fill_public_key(&node);
+    compare_keys("M446000_pubkey", node.public_key, m446000_pubkey, publickey_len);
+    // node_details(node); 
+
+    hdnode_private_ckd(&node, address_idx);
+    hdnode_fill_public_key(&node);
+    compare_keys("M4460000_pubkey", node.public_key, m4460000_pubkey, publickey_len);
+    // node_details(node); 
+
+    memcpy(public_key, node.public_key, publickey_len);
+    memcpy(private_key, node.private_key, privkey_len);   
+
+    uint8_t address[33];
+    hdnode_get_address_raw(&node, 0, address);
+    print_arr("master address", address, privkey_len); // input address of the unsigned txn 
+}
+int compare_keys(char* name, uint8_t* key1, const char* key2, size_t size){
+    uint8_t key2_arr[size];
+    
+    print_hexarr(name, key2, size, key2_arr);
+
+    int result = memcmp(key1, key2_arr, size);
+    if (result==0){
+        printf("%s matched!\n", name);
+    } else {
+        printf("%s UNMATCHED :(\n", name);
+    }
+}
+
+void node_details(HDNode node){
+    printf("\nnode details: child_num[%02x] : depth[%02x]\n", node.child_num, node.depth);
 }
 
 uint8_t* rlp(int data_size, const char* data_hex, uint8_t* packet){
@@ -179,69 +243,6 @@ int generate_unsigned_txn(uint8_t* public_key, size_t pubkey_len, uint8_t* unsig
 void hash256(uint8_t* data, uint8_t* output, size_t size) {
     hasher_Raw(HASHER_SHA3K, data, size, output);
     compare_keys("Unsign_txn hash", output, hash, SHA3_256_DIGEST_LENGTH);
-}
-
-void get_keys(const char *mnemonic, const char *passphrase, uint8_t* public_key, uint8_t* private_key,
-                size_t publickey_len, size_t privkey_len, uint32_t purpose, uint32_t coin_type, 
-                uint32_t account, uint32_t change, uint32_t address_idx) {
-    uint8_t seed[64];
-    mnemonic_to_seed(mnemonic, passphrase, seed, 0);
-    compare_keys("Seed", seed, vseed, 64);
-
-    HDNode node;
-    hdnode_from_seed(seed, 64, "secp256k1", &node);
-    hdnode_fill_public_key(&node);
-    compare_keys("Master_pubkey", node.public_key, m_pubkey, publickey_len);
-    compare_keys("Master_chaincode", node.chain_code, m_chaincode, privkey_len); 
-    // node_details(node);    
-
-    hdnode_private_ckd(&node, purpose);
-    hdnode_fill_public_key(&node); 
-    compare_keys("M44_pubkey", node.public_key, m44_pubkey, publickey_len);
-    // node_details(node); 
-
-    hdnode_private_ckd(&node, coin_type);
-    hdnode_fill_public_key(&node);
-    compare_keys("M4460_pubkey", node.public_key, m4460_pubkey, publickey_len);
-    // node_details(node); 
-
-    hdnode_private_ckd(&node, account);
-    hdnode_fill_public_key(&node);
-    compare_keys("M44600_pubkey", node.public_key, m44600_pubkey, publickey_len);
-    // node_details(node); 
-
-    hdnode_private_ckd(&node, change);
-    hdnode_fill_public_key(&node);
-    compare_keys("M446000_pubkey", node.public_key, m446000_pubkey, publickey_len);
-    // node_details(node); 
-
-    hdnode_private_ckd(&node, address_idx);
-    hdnode_fill_public_key(&node);
-    compare_keys("M4460000_pubkey", node.public_key, m4460000_pubkey, publickey_len);
-    // node_details(node); 
-
-    memcpy(public_key, node.public_key, publickey_len);
-    memcpy(private_key, node.private_key, privkey_len);   
-
-    // uint8_t address[33];
-    // hdnode_get_address_raw(&node, 2, address);
-    // print_arr("master address", address, privkey_len); // input address of the unsigned txn 
-}
-int compare_keys(char* name, uint8_t* key1, const char* key2, size_t size){
-    uint8_t key2_arr[size];
-    
-    print_hexarr(name, key2, size, key2_arr);
-
-    int result = memcmp(key1, key2_arr, size);
-    if (result==0){
-        printf("%s matched!\n", name);
-    } else {
-        printf("%s UNMATCHED :(\n", name);
-    }
-}
-
-void node_details(HDNode node){
-    printf("\nnode details: child_num[%02x] : depth[%02x]\n", node.child_num, node.depth);
 }
 
 uint32_t generate_vrs(const uint8_t *sig, int rec_id, uint32_t v, uint8_t* r, uint8_t* s, size_t sig_len){

@@ -8,6 +8,7 @@
         "string_view": "c",
         "initializer_list": "c",
         "utility": "c",
-        "bip32.h": "c"
+        "bip32.h": "c",
+        "ed25519-sha3.h": "c"
     }
 }
