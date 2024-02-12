@@ -79,44 +79,47 @@ void get_keys(const char *mnemonic, const char *passphrase, uint8_t* public_key,
     compare_keys("Seed", seed, vseed, 64);
     print_arr("seed", seed, 64);
 
+    memzero(public_key, publickey_len);
+    memzero(private_key, privkey_len);
+
     HDNode node;
-    hdnode_from_seed(seed, 64, "secp256k1", &node);
-    hdnode_fill_public_key(&node);
-    compare_keys("Master_pubkey", node.public_key, m_pubkey, publickey_len);
-    compare_keys("Master_chaincode", node.chain_code, m_chaincode, privkey_len); 
-    node_details(node);    
+    hdnode_from_seed(seed, 64, "stark256", &node);
+    // hdnode_fill_public_key(&node);
+    // compare_keys("Master_pubkey", node.public_key, m_pubkey, publickey_len);
+    // compare_keys("Master_chaincode", node.chain_code, m_chaincode, privkey_len); 
+    // node_details(node);    
 
-    hdnode_private_ckd(&node, purpose);
-    hdnode_fill_public_key(&node); 
-    compare_keys("M44_pubkey", node.public_key, m44_pubkey, publickey_len);
-    // node_details(node); 
+    // hdnode_private_ckd(&node, purpose);
+    // hdnode_fill_public_key(&node); 
+    // compare_keys("M44_pubkey", node.public_key, m44_pubkey, publickey_len);
+    // // node_details(node); 
 
-    hdnode_private_ckd(&node, coin_type);
-    hdnode_fill_public_key(&node);
-    compare_keys("M4460_pubkey", node.public_key, m4460_pubkey, publickey_len);
-    // node_details(node); 
+    // hdnode_private_ckd(&node, coin_type);
+    // hdnode_fill_public_key(&node);
+    // compare_keys("M4460_pubkey", node.public_key, m4460_pubkey, publickey_len);
+    // // node_details(node); 
 
-    hdnode_private_ckd(&node, account);
-    hdnode_fill_public_key(&node);
-    compare_keys("M44600_pubkey", node.public_key, m44600_pubkey, publickey_len);
-    // node_details(node); 
+    // hdnode_private_ckd(&node, account);
+    // hdnode_fill_public_key(&node);
+    // compare_keys("M44600_pubkey", node.public_key, m44600_pubkey, publickey_len);
+    // // node_details(node); 
 
-    hdnode_private_ckd(&node, change);
-    hdnode_fill_public_key(&node);
-    compare_keys("M446000_pubkey", node.public_key, m446000_pubkey, publickey_len);
-    // node_details(node); 
+    // hdnode_private_ckd(&node, change);
+    // hdnode_fill_public_key(&node);
+    // compare_keys("M446000_pubkey", node.public_key, m446000_pubkey, publickey_len);
+    // // node_details(node); 
 
-    hdnode_private_ckd(&node, address_idx);
-    hdnode_fill_public_key(&node);
-    compare_keys("M4460000_pubkey", node.public_key, m4460000_pubkey, publickey_len);
-    // node_details(node); 
+    // hdnode_private_ckd(&node, address_idx);
+    // hdnode_fill_public_key(&node);
+    // compare_keys("M4460000_pubkey", node.public_key, m4460000_pubkey, publickey_len);
+    // // node_details(node); 
 
-    memcpy(public_key, node.public_key, publickey_len);
-    memcpy(private_key, node.private_key, privkey_len);   
+    // memcpy(public_key, node.public_key, publickey_len);
+    // memcpy(private_key, node.private_key, privkey_len);   
 
-    uint8_t address[33];
-    hdnode_get_address_raw(&node, 0, address);
-    print_arr("master address", address, privkey_len); // input address of the unsigned txn 
+    // uint8_t address[33];
+    // hdnode_get_address_raw(&node, 0, address);
+    // print_arr("master address", address, privkey_len); // input address of the unsigned txn 
 }
 int compare_keys(char* name, uint8_t* key1, const char* key2, size_t size){
     uint8_t key2_arr[size];
