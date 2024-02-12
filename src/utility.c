@@ -1,4 +1,5 @@
 #include "utility.h"
+#include "curves.h"
 
 const char* hash = "9447bd9c4b781d2aa4733461f3062ed08bee88e83ea81a80899bf19af274e12d";
 const char* vseed = "2990a761daa2249c91ae98acf56ecf558876f6aa566e1e6e025996f12c830b793d87dde3f68cf9138fbe041bb75ba500c8eadee43d3ce2c95f84f89925bf8db5";
@@ -83,8 +84,8 @@ void get_keys(const char *mnemonic, const char *passphrase, uint8_t* public_key,
     memzero(private_key, privkey_len);
 
     HDNode node;
-    hdnode_from_seed(seed, 64, "stark256", &node);
-    // hdnode_fill_public_key(&node);
+    hdnode_from_seed(seed, 64, SECP256K1_NAME, &node);
+    hdnode_fill_public_key(&node);
     // compare_keys("Master_pubkey", node.public_key, m_pubkey, publickey_len);
     // compare_keys("Master_chaincode", node.chain_code, m_chaincode, privkey_len); 
     // node_details(node);    
