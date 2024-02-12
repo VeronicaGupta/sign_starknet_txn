@@ -49,7 +49,7 @@
 #include "memzero.h"
 
 const curve_info ed25519_info = {
-    .bip32_name = ED25519_SEED_NAME,
+    .bip32_name = "ed25519 seed",
     .params = NULL,
     .hasher_base58 = HASHER_SHA2D,
     .hasher_sign = HASHER_SHA2D,
@@ -79,6 +79,15 @@ const curve_info ed25519_keccak_info = {
 
 const curve_info curve25519_info = {
     .bip32_name = "curve25519 seed",
+    .params = NULL,
+    .hasher_base58 = HASHER_SHA2D,
+    .hasher_sign = HASHER_SHA2D,
+    .hasher_pubkey = HASHER_SHA2_RIPEMD,
+    .hasher_script = HASHER_SHA2,
+};
+
+const curve_info stark256_info = {
+    .bip32_name = "stark2565 seed",
     .params = NULL,
     .hasher_base58 = HASHER_SHA2D,
     .hasher_sign = HASHER_SHA2D,
@@ -796,6 +805,9 @@ const curve_info *get_curve_by_name(const char *curve_name) {
   }
   if (strcmp(curve_name, ED25519_NAME) == 0) {
     return &ed25519_info;
+  }
+  if (strcmp(curve_name, STARK256_NAME) == 0) {
+    return &stark256_info;
   }
 #if USE_CARDANO
   if (strcmp(curve_name, ED25519_CARDANO_NAME) == 0) {

@@ -50,7 +50,7 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-include/trezor-cryptol/*
+# include/trezor-cryptol/*
 include/bolos
 nano-capp-starknet/
 tests/createAccount/node_modules/*

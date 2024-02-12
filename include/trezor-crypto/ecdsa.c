@@ -803,7 +803,7 @@ int tc_ecdsa_get_public_key33(const ecdsa_curve *curve, const uint8_t *priv_key,
     return 1;
   }
   pub_key[0] = 0x02 | (R.y.val[0] & 0x01);
-  bn_write_be(&R.x, pub_key + 1);
+  (&R.x, pub_key + 1);
   memzero(&R, sizeof(R));
   memzero(&k, sizeof(k));
   return 0;
