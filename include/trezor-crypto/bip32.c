@@ -471,11 +471,11 @@ int hdnode_get_address(HDNode *node, uint32_t version, char *addr,
 int hdnode_fill_public_key(HDNode *node) {
   if (node->public_key[0] != 0) return 0;
 
-   if (node->curve == &stark256_info) {
-      stark256_get_public_key33(node->curve->params, node->private_key, node->public_key);
-
+  if (node->curve == &stark256_info) {
+    stark256_get_public_key(node->curve->params, node->private_key, node->public_key);
+  }
 #if USE_BIP32_25519_CURVES
-  if (node->curve->params) {
+  else if (node->curve->params) {
     if (ecdsa_get_public_key33(node->curve->params, node->private_key,
                                node->public_key) != 0) {
       return 1;

@@ -11,10 +11,11 @@
 #include "trezor-crypto/memzero.h"
 
 int generate_unsigned_txn(uint8_t* public_key, size_t pubkey_len, uint8_t* unsigned_txn);
-void get_keys(const char *mnemonic, const char *passphrase, uint8_t* public_key, uint8_t* private_key,
-                size_t publickey_len, size_t privkey_len, uint32_t purpose, uint32_t coin_type, 
-                uint32_t account, uint32_t change, uint32_t address_idx);
-                int compare_keys(char* name, uint8_t* key1, const char* key2, size_t size);
+int get_seed(const char *mnemonic, const char *passphrase, char *seed);
+void get_keys(const char *seed, const size_t seed_len,
+              uint32_t purpose, uint32_t coin_type, uint32_t account, uint32_t change, uint32_t address_idx, 
+              HDNode node);
+int compare_keys(char* name, uint8_t* key1, const char* key2, size_t size);
 void node_details(HDNode node);
 void hash256(uint8_t* data, uint8_t* output, size_t size);
 int calculate_parity(const uint8_t *public_key);

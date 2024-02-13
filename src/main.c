@@ -2,17 +2,36 @@
 #include "address.h"
 
 int main() {
-    // *****************eth sepolia testnet details**********************//
+    // *****************starknet goerli testnet details**********************//
 
-    // get from bip39 (24 words) 
-    const char* mnemonic = "road donate inch warm beyond sea wink shoot fashion gain put vocal";
-    const char* passphrase = "";
+    const seed_len = 64;
+    const pubkey_len = 32;
+    const privkey_len = 32;
+    const addr_len = 32;
 
-    const int pubkey_len = 32; // uncompressed
-    const int privkey_len = 32;
-
+    uint8_t seed[seed_len];
     uint8_t public_key[pubkey_len];
     uint8_t private_key[privkey_len];
+    HDNode node;
+    uint8_t address[addr_len];
+
+    // get seed from bip39 (24 words) 
+    const char* mnemonic = "road donate inch warm beyond sea wink shoot fashion gain put vocal";
+    const char* passphrase = "";
+    const char *classHash = "0x029927c8af6bccf3f6fda035981e765a7bdbf18a2dc0d630494f8758aa908e2b";
+
+    get_seed(mnemonic, passphrase, seed);
+
+    // Constants for HD path
+    #define PURPOSE     0x8000002C  // 44
+    #define COIN_TYPE   0x8000003C  // 60 Ethereum
+    #define ACCOUNT     0x80000000 
+    #define CHANGE      0x00000000
+    #define ADDRESS_IDX 0x00000000
+
+    get_keys(seed, seed_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX, node);
+    print_arr("m/40'/60'/0'/0/0 public key", public_key, pubkey_len);
+    print_arr("m/40'/60'/0'/0/0 private key", private_key, privkey_len);
 
     // Constants for HD path m / purpose' / coin_type' / account' / change / address_index
     #define PURPOSE     0x8000002C  // 44
@@ -21,9 +40,12 @@ int main() {
     #define CHANGE      0x00000000
     #define ADDRESS_IDX 0x00000000
 
-    get_keys(mnemonic, passphrase, public_key, private_key, pubkey_len, privkey_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX);   
-    print_arr("master public key", public_key, pubkey_len); // of the input address of the unsigned txn
-    print_arr("master private key", private_key, privkey_len); // of the input address of the unsigned txn
+    get_keys(&node.private_key[0], privkey_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX, node);   
+    print_arr("m/40'/9004'/0'/0/0 public key", public_key, pubkey_len); // of the input address of the unsigned txn
+    print_arr("m/40'/9004'/0'/0/0 private key", private_key, privkey_len); // of the input address of the unsigned txn
+
+    hdnode_get_address_raw(&node, 0, address);
+    print_arr("master address", address, privkey_len); // input address of the unsigned txn 
 
     // ***************when coins in account****************************//
 

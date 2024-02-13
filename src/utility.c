@@ -22,6 +22,11 @@ const char* data = "80"; // 0.02 ETH
 const int chain_id = 11155111; // sepolia
 const char* chain_id_hex = "aa36a7"; // sepolia
 
+const seed_len = 64;
+const pubkey_len = 32;
+const privkey_len = 32;
+const addr_len = 32;
+
 void curve_parameters(){
     char *obj_hex_org;
     bignum256 obj_bn_org;
@@ -72,55 +77,46 @@ void curve_parameters(){
     bn_check_hex(obj_hex_org, obj_bn_org);
 }
 
-void get_keys(const char *mnemonic, const char *passphrase, uint8_t* public_key, uint8_t* private_key,
-                size_t publickey_len, size_t privkey_len, uint32_t purpose, uint32_t coin_type, 
-                uint32_t account, uint32_t change, uint32_t address_idx) {
-    uint8_t seed[64];
+int get_seed(const char *mnemonic, const char *passphrase, char *seed){
     mnemonic_to_seed(mnemonic, passphrase, seed, 0);
-    compare_keys("Seed", seed, vseed, 64);
-    print_arr("seed", seed, 64);
+    compare_keys("Seed", seed, vseed, seed_len);
+    print_arr("seed", seed, seed_len);
+}
 
-    memzero(public_key, publickey_len);
-    memzero(private_key, privkey_len);
+void get_keys(const char *seed, const size_t seed_len,
+              uint32_t purpose, uint32_t coin_type, uint32_t account, uint32_t change, uint32_t address_idx, 
+              HDNode node) {
 
-    HDNode node;
-    hdnode_from_seed(seed, 64, STARK256_NAME, &node);
+    hdnode_from_seed(seed, seed_len, STARK256_NAME, &node);
     hdnode_fill_public_key(&node);
-    // compare_keys("Master_pubkey", node.public_key, m_pubkey, publickey_len);
+    // compare_keys("Master_pubkey", node.public_key, m_pubkey, pubkey_len);
     // compare_keys("Master_chaincode", node.chain_code, m_chaincode, privkey_len); 
-    // node_details(node);    
+    node_details(node);    
 
-    // hdnode_private_ckd(&node, purpose);
-    // hdnode_fill_public_key(&node); 
-    // compare_keys("M44_pubkey", node.public_key, m44_pubkey, publickey_len);
-    // // node_details(node); 
+    hdnode_private_ckd(&node, purpose);
+    hdnode_fill_public_key(&node); 
+    // compare_keys("M44_pubkey", node.public_key, m44_pubkey, pubkey_len);
+    node_details(node); 
 
-    // hdnode_private_ckd(&node, coin_type);
-    // hdnode_fill_public_key(&node);
-    // compare_keys("M4460_pubkey", node.public_key, m4460_pubkey, publickey_len);
-    // // node_details(node); 
+    hdnode_private_ckd(&node, coin_type);
+    hdnode_fill_public_key(&node);
+    // compare_keys("M4460_pubkey", node.public_key, m4460_pubkey, pubkey_len);
+    node_details(node); 
 
-    // hdnode_private_ckd(&node, account);
-    // hdnode_fill_public_key(&node);
-    // compare_keys("M44600_pubkey", node.public_key, m44600_pubkey, publickey_len);
-    // // node_details(node); 
+    hdnode_private_ckd(&node, account);
+    hdnode_fill_public_key(&node);
+    // compare_keys("M44600_pubkey", node.public_key, m44600_pubkey, pubkey_len);
+    node_details(node); 
 
-    // hdnode_private_ckd(&node, change);
-    // hdnode_fill_public_key(&node);
-    // compare_keys("M446000_pubkey", node.public_key, m446000_pubkey, publickey_len);
-    // // node_details(node); 
+    hdnode_private_ckd(&node, change);
+    hdnode_fill_public_key(&node);
+    // compare_keys("M446000_pubkey", node.public_key, m446000_pubkey, pubkey_len);
+    node_details(node); 
 
-    // hdnode_private_ckd(&node, address_idx);
-    // hdnode_fill_public_key(&node);
-    // compare_keys("M4460000_pubkey", node.public_key, m4460000_pubkey, publickey_len);
-    // // node_details(node); 
-
-    // memcpy(public_key, node.public_key, publickey_len);
-    // memcpy(private_key, node.private_key, privkey_len);   
-
-    // uint8_t address[33];
-    // hdnode_get_address_raw(&node, 0, address);
-    // print_arr("master address", address, privkey_len); // input address of the unsigned txn 
+    hdnode_private_ckd(&node, address_idx);
+    hdnode_fill_public_key(&node);
+    // compare_keys("M4460000_pubkey", node.public_key, m4460000_pubkey, pubkey_len);
+    node_details(node); 
 }
 
 int compare_keys(char* name, uint8_t* key1, const char* key2, size_t size){

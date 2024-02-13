@@ -27,3 +27,27 @@ const curve_info stark256_info = {
     .hasher_pubkey = HASHER_SHA2_RIPEMD,
     .hasher_script = HASHER_SHA2,
 };
+
+int stark256_get_public_key(const ecdsa_curve *curve, uint8_t *priv_key, uint8_t *pub_key){
+    curve_point R = {0};
+    bignum256 k = {0};
+
+    bn_read_be(priv_key, &k);
+    if (bn_is_zero(&k) || !bn_is_less(&k, &curve->order)) {
+    // Invalid private key.
+    memzero(pub_key, 33);
+    return -1;
+    }
+
+    // compute k*G
+    if (scalar_multiply(curve, &k, &R) != 0) {
+    memzero(&k, sizeof(k));
+    return 1;
+    }
+
+    pub_key[0] = 0x02 | (R.y.val[0] & 0x01);
+    bn_write_be(&R.x, pub_key + 1);
+    memzero(&R, sizeof(R));
+    memzero(&k, sizeof(k));
+    return 0;
+}
