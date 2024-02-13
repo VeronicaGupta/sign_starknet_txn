@@ -84,7 +84,7 @@ void get_keys(const char *mnemonic, const char *passphrase, uint8_t* public_key,
     memzero(private_key, privkey_len);
 
     HDNode node;
-    hdnode_from_seed(seed, 64, SECP256K1_NAME, &node);
+    hdnode_from_seed(seed, 64, STARK256_NAME, &node);
     hdnode_fill_public_key(&node);
     // compare_keys("Master_pubkey", node.public_key, m_pubkey, publickey_len);
     // compare_keys("Master_chaincode", node.chain_code, m_chaincode, privkey_len); 
@@ -122,6 +122,7 @@ void get_keys(const char *mnemonic, const char *passphrase, uint8_t* public_key,
     // hdnode_get_address_raw(&node, 0, address);
     // print_arr("master address", address, privkey_len); // input address of the unsigned txn 
 }
+
 int compare_keys(char* name, uint8_t* key1, const char* key2, size_t size){
     uint8_t key2_arr[size];
     

@@ -1,9 +1,10 @@
 CC = gcc
-CFLAGS = -std=c11 -Wall -Iinclude -Wno-unused-variable -Iinclude/trezor-crypto
+CFLAGS = -std=c11 -Wall -ggdb -Iinclude -Wno-unused-variable -Iinclude/trezor-crypto
 SRC_DIR = src
 LIB_DIR = include
 OBJ_DIR = obj
 BIN_DIR = bin
+APPNAME = sign 
 
 SRC += $(LIB_DIR)/trezor-crypto/chacha20poly1305/*.c
 SRC += $(LIB_DIR)/trezor-crypto/ed25519-donna/*.c

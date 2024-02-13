@@ -38,6 +38,7 @@
 #include "hmac.h"
 #include "nist256p1.h"
 #include "secp256k1.h"
+#include "stark256.h"
 #include "sha2.h"
 #include "sha3.h"
 #if USE_KECCAK
@@ -79,15 +80,6 @@ const curve_info ed25519_keccak_info = {
 
 const curve_info curve25519_info = {
     .bip32_name = "curve25519 seed",
-    .params = NULL,
-    .hasher_base58 = HASHER_SHA2D,
-    .hasher_sign = HASHER_SHA2D,
-    .hasher_pubkey = HASHER_SHA2_RIPEMD,
-    .hasher_script = HASHER_SHA2,
-};
-
-const curve_info stark256_info = {
-    .bip32_name = "stark2565 seed",
     .params = NULL,
     .hasher_base58 = HASHER_SHA2D,
     .hasher_sign = HASHER_SHA2D,
@@ -478,6 +470,9 @@ int hdnode_get_address(HDNode *node, uint32_t version, char *addr,
 
 int hdnode_fill_public_key(HDNode *node) {
   if (node->public_key[0] != 0) return 0;
+
+   if (node->curve == &stark256_info) {
+      stark256_get_public_key33(node->curve->params, node->private_key, node->public_key);
 
 #if USE_BIP32_25519_CURVES
   if (node->curve->params) {
