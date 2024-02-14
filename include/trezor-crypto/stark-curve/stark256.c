@@ -1,4 +1,5 @@
 #include "stark256.h"
+// #include "bolos/cxlib.h"
 
 const ecdsa_curve stark256 = {
     /* .prime */ {/*.val =*/{0x00000001, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00440000, 0x00000000, 0x080000}},
@@ -29,25 +30,11 @@ const curve_info stark256_info = {
 };
 
 int stark256_get_public_key(const ecdsa_curve *curve, uint8_t *priv_key, uint8_t *pub_key){
-    curve_point R = {0};
-    bignum256 k = {0};
-
-    bn_read_be(priv_key, &k);
-    if (bn_is_zero(&k) || !bn_is_less(&k, &curve->order)) {
-    // Invalid private key.
-    memzero(pub_key, 33);
-    return -1;
-    }
-
-    // compute k*G
-    if (scalar_multiply(curve, &k, &R) != 0) {
-    memzero(&k, sizeof(k));
-    return 1;
-    }
-
-    pub_key[0] = 0x02 | (R.y.val[0] & 0x01);
-    bn_write_be(&R.x, pub_key + 1);
-    memzero(&R, sizeof(R));
-    memzero(&k, sizeof(k));
+    
+    // cx_ecfp_get_domain(CX_CURVE_Stark256);
+    // sys_cx_ecpoint_scalarmul(ec_P, k, k_len); 
+    // sys_cx_ecpoint_scalarmul(ec_P, k, k_len);
+    
+    
     return 0;
 }

@@ -38,7 +38,7 @@
 #include "hmac.h"
 #include "nist256p1.h"
 #include "secp256k1.h"
-#include "stark256.h"
+#include "stark-curve/stark256.h"
 #include "sha2.h"
 #include "sha3.h"
 #if USE_KECCAK
