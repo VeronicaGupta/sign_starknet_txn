@@ -55,3 +55,4 @@ include/stark-curve
 nano-capp-starknet/
 tests/createAccount/node_modules/*
 .vscode/*
+build

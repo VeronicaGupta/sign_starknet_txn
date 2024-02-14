@@ -86,41 +86,43 @@ int get_seed(const char *mnemonic, const char *passphrase, char *seed){
 void get_keys(const char *seed, const size_t seed_len,
               uint32_t purpose, uint32_t coin_type, uint32_t account, uint32_t change, uint32_t address_idx, 
               HDNode node) {
-
+   
     hdnode_from_seed(seed, seed_len, STARK256_NAME, &node);
-    hdnode_fill_public_key(&node);
+    // hdnode_fill_public_key(&node);
     // compare_keys("Master_pubkey", node.public_key, m_pubkey, pubkey_len);
     // compare_keys("Master_chaincode", node.chain_code, m_chaincode, privkey_len); 
     // node_details(node);    
 
     hdnode_private_ckd(&node, purpose);
-    hdnode_fill_public_key(&node); 
+    // hdnode_fill_public_key(&node); 
     // compare_keys("M44_pubkey", node.public_key, m44_pubkey, pubkey_len);
     // node_details(node); 
 
     hdnode_private_ckd(&node, coin_type);
-    hdnode_fill_public_key(&node);
+    // hdnode_fill_public_key(&node);
     // compare_keys("M4460_pubkey", node.public_key, m4460_pubkey, pubkey_len);
     // node_details(node); 
 
     hdnode_private_ckd(&node, account);
-    hdnode_fill_public_key(&node);
+    // hdnode_fill_public_key(&node);
     // compare_keys("M44600_pubkey", node.public_key, m44600_pubkey, pubkey_len);
     // node_details(node); 
 
     hdnode_private_ckd(&node, change);
-    hdnode_fill_public_key(&node);
+    // hdnode_fill_public_key(&node);
     // compare_keys("M446000_pubkey", node.public_key, m446000_pubkey, pubkey_len);
     // node_details(node); 
 
     hdnode_private_ckd(&node, address_idx);
-    hdnode_fill_public_key(&node);
+    // hdnode_fill_public_key(&node);
     // compare_keys("M4460000_pubkey", node.public_key, m4460000_pubkey, pubkey_len);
     // node_details(node); 
 
     uint8_t address[addr_len];
     hdnode_get_address_raw(&node, 1, address);
     print_arr("address", address, privkey_len);
+    print_arr("private key", node.private_key, privkey_len); 
+    print_arr("public key", node.public_key, pubkey_len);
 }
 
 int compare_keys(char* name, uint8_t* key1, const char* key2, size_t size){

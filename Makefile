@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -std=c11 -Wall -ggdb -Iinclude -Wno-unused-variable -Iinclude/trezor-crypto -Iinclude/stark-curve
+CFLAGS = -std=c11 -Wall -ggdb -Iinclude -Wno-unused-variable -Iinclude/trezor-crypto
 LDLIBS = -lssl -lcrypto
 SRC_DIR = src
 LIB_DIR = include
@@ -9,6 +9,8 @@ APPNAME = sign
 
 SRC += $(LIB_DIR)/trezor-crypto/chacha20poly1305/*.c
 SRC += $(LIB_DIR)/trezor-crypto/ed25519-donna/*.c
+SRC += $(LIB_DIR)/trezor-crypto/stark-curve/*.c
+# SRC += $(LIB_DIR)/trezor-crypto/stark-curve/bolos/*.c
 
 SRC += $(filter-out $(wildcard $(LIB_DIR)/trezor-crypto/zkp_bip340.c \
 							   $(LIB_DIR)/trezor-crypto/zkp_context.c \

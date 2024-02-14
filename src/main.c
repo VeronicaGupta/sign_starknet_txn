@@ -41,8 +41,6 @@ int main() {
 
     printf("\nPATH=m/40'/60'/0'/0/0\n");
     get_keys(seed, seed_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX, node);
-    print_arr("public key", node.public_key, pubkey_len);
-    print_arr("private key", node.private_key, privkey_len);
 
     // Constants for HD path m / purpose' / coin_type' / account' / change / address_index
     #define PURPOSE     0x8000002C  // 44
@@ -57,9 +55,8 @@ int main() {
     memzero(address, addr_len);
 
     printf("\nPATH=m/40'/9004'/0'/0/0\n");
-    get_keys(&node.private_key[0], privkey_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX, node);   
-    print_arr("m/40'/9004'/0'/0/0 public key", node.public_key, pubkey_len);
-    print_arr("m/40'/9004'/0'/0/0 private key", node.private_key, privkey_len);
+    print_arr("1122", &node.private_key, privkey_len);
+    get_keys(&node.private_key[0], privkey_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX, node);
 
     // ***************when coins in account****************************//
 
