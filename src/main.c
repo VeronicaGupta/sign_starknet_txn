@@ -2,23 +2,27 @@
 #include "address.h"
 
 int main() {
-    // *****************starknet goerli testnet details**********************//
+    // *****************starknet g testnet details**********************//
 
-    const seed_len = 64;
-    const pubkey_len = 32;
-    const privkey_len = 32;
-    const addr_len = 32;
+    const size_t seed_len = 64;
+    size_t pubkey_len = 32;
+    const size_t privkey_len = 32;
+    const size_t addr_len = 32;
 
     uint8_t seed[seed_len];
     uint8_t public_key[pubkey_len];
     uint8_t private_key[privkey_len];
-    HDNode node;
     uint8_t address[addr_len];
+    HDNode node;    
 
-    // get seed from bip39 (24 words) 
+    // get seed for eth 
+    // const char* mnemonic = "spread sword village control response joke phrase share merit miss door canoe setup surge remind tiger increase sphere busy hand scrap diesel hair bomb";
+    // const char* passphrase = "";
+    // pubkey_len = 33; // uncompressed
+
+    // get stark seed from bip39 (24 words) 
     const char* mnemonic = "road donate inch warm beyond sea wink shoot fashion gain put vocal";
     const char* passphrase = "";
-    const char *classHash = "0x029927c8af6bccf3f6fda035981e765a7bdbf18a2dc0d630494f8758aa908e2b";
 
     get_seed(mnemonic, passphrase, seed);
 
@@ -29,9 +33,16 @@ int main() {
     #define CHANGE      0x00000000
     #define ADDRESS_IDX 0x00000000
 
+    memzero(seed, seed_len);
+    memzero(public_key, pubkey_len);
+    memzero(private_key, privkey_len);
+    memzero(address, addr_len);
+
+
+    printf("\nPATH=m/40'/60'/0'/0/0\n");
     get_keys(seed, seed_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX, node);
-    print_arr("m/40'/60'/0'/0/0 public key", public_key, pubkey_len);
-    print_arr("m/40'/60'/0'/0/0 private key", private_key, privkey_len);
+    print_arr("public key", node.public_key, pubkey_len);
+    print_arr("private key", node.private_key, privkey_len);
 
     // Constants for HD path m / purpose' / coin_type' / account' / change / address_index
     #define PURPOSE     0x8000002C  // 44
@@ -40,12 +51,15 @@ int main() {
     #define CHANGE      0x00000000
     #define ADDRESS_IDX 0x00000000
 
-    get_keys(&node.private_key[0], privkey_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX, node);   
-    print_arr("m/40'/9004'/0'/0/0 public key", public_key, pubkey_len); // of the input address of the unsigned txn
-    print_arr("m/40'/9004'/0'/0/0 private key", private_key, privkey_len); // of the input address of the unsigned txn
+    memzero(seed, seed_len);
+    memzero(public_key, pubkey_len);
+    memzero(private_key, privkey_len);
+    memzero(address, addr_len);
 
-    hdnode_get_address_raw(&node, 0, address);
-    print_arr("master address", address, privkey_len); // input address of the unsigned txn 
+    printf("\nPATH=m/40'/9004'/0'/0/0\n");
+    get_keys(&node.private_key[0], privkey_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX, node);   
+    print_arr("m/40'/9004'/0'/0/0 public key", node.public_key, pubkey_len);
+    print_arr("m/40'/9004'/0'/0/0 private key", node.private_key, privkey_len);
 
     // ***************when coins in account****************************//
 

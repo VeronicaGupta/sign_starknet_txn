@@ -1,5 +1,6 @@
 CC = gcc
-CFLAGS = -std=c11 -Wall -ggdb -Iinclude -Wno-unused-variable -Iinclude/trezor-crypto
+CFLAGS = -std=c11 -Wall -ggdb -Iinclude -Wno-unused-variable -Iinclude/trezor-crypto -Iinclude/stark-curve
+LDLIBS = -lssl -lcrypto
 SRC_DIR = src
 LIB_DIR = include
 OBJ_DIR = obj
@@ -20,7 +21,7 @@ DEP = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.d, $(SRC))
 EXE = $(BIN_DIR)/sign
 
 $(EXE): $(OBJ) | $(BIN_DIR)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) $(LDLIBS) -o $@ $^
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -MMD -c -o $@ $<

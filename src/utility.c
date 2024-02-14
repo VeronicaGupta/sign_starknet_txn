@@ -22,10 +22,10 @@ const char* data = "80"; // 0.02 ETH
 const int chain_id = 11155111; // sepolia
 const char* chain_id_hex = "aa36a7"; // sepolia
 
-const seed_len = 64;
-const pubkey_len = 32;
-const privkey_len = 32;
-const addr_len = 32;
+const size_t seed_len = 64;
+const size_t pubkey_len = 32;
+const size_t privkey_len = 32;
+const size_t addr_len = 32;
 
 void curve_parameters(){
     char *obj_hex_org;
@@ -91,32 +91,36 @@ void get_keys(const char *seed, const size_t seed_len,
     hdnode_fill_public_key(&node);
     // compare_keys("Master_pubkey", node.public_key, m_pubkey, pubkey_len);
     // compare_keys("Master_chaincode", node.chain_code, m_chaincode, privkey_len); 
-    node_details(node);    
+    // node_details(node);    
 
     hdnode_private_ckd(&node, purpose);
     hdnode_fill_public_key(&node); 
     // compare_keys("M44_pubkey", node.public_key, m44_pubkey, pubkey_len);
-    node_details(node); 
+    // node_details(node); 
 
     hdnode_private_ckd(&node, coin_type);
     hdnode_fill_public_key(&node);
     // compare_keys("M4460_pubkey", node.public_key, m4460_pubkey, pubkey_len);
-    node_details(node); 
+    // node_details(node); 
 
     hdnode_private_ckd(&node, account);
     hdnode_fill_public_key(&node);
     // compare_keys("M44600_pubkey", node.public_key, m44600_pubkey, pubkey_len);
-    node_details(node); 
+    // node_details(node); 
 
     hdnode_private_ckd(&node, change);
     hdnode_fill_public_key(&node);
     // compare_keys("M446000_pubkey", node.public_key, m446000_pubkey, pubkey_len);
-    node_details(node); 
+    // node_details(node); 
 
     hdnode_private_ckd(&node, address_idx);
     hdnode_fill_public_key(&node);
     // compare_keys("M4460000_pubkey", node.public_key, m4460000_pubkey, pubkey_len);
-    node_details(node); 
+    // node_details(node); 
+
+    uint8_t address[addr_len];
+    hdnode_get_address_raw(&node, 1, address);
+    print_arr("address", address, privkey_len);
 }
 
 int compare_keys(char* name, uint8_t* key1, const char* key2, size_t size){
