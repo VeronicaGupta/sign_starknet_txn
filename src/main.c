@@ -55,8 +55,8 @@ int main() {
     memzero(address, addr_len);
 
     printf("\nPATH=m/40'/9004'/0'/0/0\n");
-    print_arr("1122", &node.private_key, privkey_len);
-    get_keys(&node.private_key[0], privkey_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX, node);
+    print_arr("1122", node.private_key, privkey_len);
+    get_keys(&node.private_key, privkey_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX, node);
 
     // ***************when coins in account****************************//
 

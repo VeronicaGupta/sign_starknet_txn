@@ -112,7 +112,8 @@ void get_keys(const char *seed, const size_t seed_len,
     // hdnode_fill_public_key(&node);
     // compare_keys("M446000_pubkey", node.public_key, m446000_pubkey, pubkey_len);
     // node_details(node); 
-
+    print_arr("private key", node.private_key, privkey_len);
+    
     hdnode_private_ckd(&node, address_idx);
     // hdnode_fill_public_key(&node);
     // compare_keys("M4460000_pubkey", node.public_key, m4460000_pubkey, pubkey_len);
