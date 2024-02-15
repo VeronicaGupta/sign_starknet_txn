@@ -38,7 +38,6 @@
 #include "hmac.h"
 #include "nist256p1.h"
 #include "secp256k1.h"
-#include "stark-curve/stark256.h"
 #include "sha2.h"
 #include "sha3.h"
 #if USE_KECCAK
@@ -50,7 +49,7 @@
 #include "memzero.h"
 
 const curve_info ed25519_info = {
-    .bip32_name = "ed25519 seed",
+    .bip32_name = ED25519_SEED_NAME,
     .params = NULL,
     .hasher_base58 = HASHER_SHA2D,
     .hasher_sign = HASHER_SHA2D,
@@ -471,11 +470,8 @@ int hdnode_get_address(HDNode *node, uint32_t version, char *addr,
 int hdnode_fill_public_key(HDNode *node) {
   if (node->public_key[0] != 0) return 0;
 
-  if (node->curve == &stark256_info) {
-    stark256_get_public_key(node->curve->params, node->private_key, node->public_key);
-  }
 #if USE_BIP32_25519_CURVES
-  else if (node->curve->params) {
+  if (node->curve->params) {
     if (ecdsa_get_public_key33(node->curve->params, node->private_key,
                                node->public_key) != 0) {
       return 1;
@@ -800,9 +796,6 @@ const curve_info *get_curve_by_name(const char *curve_name) {
   }
   if (strcmp(curve_name, ED25519_NAME) == 0) {
     return &ed25519_info;
-  }
-  if (strcmp(curve_name, STARK256_NAME) == 0) {
-    return &stark256_info;
   }
 #if USE_CARDANO
   if (strcmp(curve_name, ED25519_CARDANO_NAME) == 0) {

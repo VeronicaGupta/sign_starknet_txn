@@ -527,8 +527,7 @@ void bn_mult_half(bignum256 *x, const bignum256 *prime) {
 // Assumes prime is normalized and 2^256 - 2^224 <= prime <= 2^256
 // Guarantees x is normalized and partly reduced modulo prime
 void bn_mult_k(bignum256 *x, uint8_t k, const bignum256 *prime) {
-  // assert(k <= 8);
-  
+  assert(k <= 8);
 
   for (int i = 0; i < BN_LIMBS; i++) {
     x->val[i] = k * x->val[i];

@@ -40,4 +40,3 @@ extern const char ED25519_KECCAK_NAME[];
 extern const char CURVE25519_NAME[];
 
 #endif
-extern const char STARK256_NAME[];
