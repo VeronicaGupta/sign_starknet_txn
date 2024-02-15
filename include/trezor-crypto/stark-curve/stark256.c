@@ -1,5 +1,5 @@
 #include "stark256.h"
-// #include "bolos/cxlib.h"
+#include "bolos/cxlib.h"
 
 const ecdsa_curve stark256 = {
     /* .prime */ {/*.val =*/{0x00000001, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00440000, 0x00000000, 0x080000}},
@@ -31,7 +31,7 @@ const curve_info stark256_info = {
 
 int stark256_get_public_key(const ecdsa_curve *curve, uint8_t *priv_key, uint8_t *pub_key){
     
-    // cx_ecfp_get_domain(CX_CURVE_Stark256);
+    cx_ecfp_get_domain(CX_CURVE_Stark256);
     // sys_cx_ecpoint_scalarmul(ec_P, k, k_len); 
     // sys_cx_ecpoint_scalarmul(ec_P, k, k_len);
     
