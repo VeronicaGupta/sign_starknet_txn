@@ -1,16 +1,14 @@
 CC = gcc
-CFLAGS = -std=c11 -Wall -ggdb -Iinclude -Wno-unused-variable -Iinclude/trezor-crypto
-LDLIBS = -lssl -lcrypto
+CFLAGS = -std=c11 -Wall -ggdb -Iinclude -Wno-unused-variable -Iinclude/trezor-crypto -Iinclude/stark-curve
 SRC_DIR = src
 LIB_DIR = include
 OBJ_DIR = obj
 BIN_DIR = bin
-APPNAME = sign 
 
 SRC += $(LIB_DIR)/trezor-crypto/chacha20poly1305/*.c
 SRC += $(LIB_DIR)/trezor-crypto/ed25519-donna/*.c
-SRC += $(LIB_DIR)/trezor-crypto/stark-curve/*.c
-# SRC += $(LIB_DIR)/trezor-crypto/stark-curve/bolos/*.c
+SRC += $(LIB_DIR)/stark-curve/src/stark_utils.c
+SRC += $(LIB_DIR)/stark-curve/*c
 
 SRC += $(filter-out $(wildcard $(LIB_DIR)/trezor-crypto/zkp_bip340.c \
 							   $(LIB_DIR)/trezor-crypto/zkp_context.c \
@@ -23,7 +21,7 @@ DEP = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.d, $(SRC))
 EXE = $(BIN_DIR)/sign
 
 $(EXE): $(OBJ) | $(BIN_DIR)
-	$(CC) $(CFLAGS) $(LDLIBS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -MMD -c -o $@ $<

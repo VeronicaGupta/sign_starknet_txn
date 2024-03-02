@@ -1,5 +1,58 @@
 #include "utility.h"
 #include "address.h"
+#include "stark-curve/stark256.h"
+
+#define _SDK_2_0_ true
+#define HAVE_STARKWARE
+
+#define CURVE_ORDER "800000000000010ffffffffffffffffb781126dcae7b2321e66a241adc64d2f"
+
+char* ensureBytes(const char* seed) {
+    // Assuming implementation of ensureBytes function
+    return strdup(seed); // Just returning a copy for simplicity
+}
+
+// Function to perform modular exponentiation (if needed)
+// This function calculates (base^exponent) % mod
+unsigned long long modular_exp(unsigned long long base, unsigned long long exponent, unsigned long long mod) {
+    unsigned long long result = 1;
+    base = base % mod;
+    while (exponent > 0) {
+        if (exponent & 1)
+            result = (result * base) % mod;
+        exponent = exponent >> 1;
+        base = (base * base) % mod;
+    }
+    return result;
+}
+
+char* grindKey(const char* seed) {
+    char* _seed = ensureBytes(seed);
+    unsigned long long sha256mask = 1ULL << 256;
+    unsigned long long limit = sha256mask - (sha256mask % strtoull(CURVE_ORDER, NULL, 16));
+    int i;
+    char buf[SHA256_DIGEST_LENGTH * 2 + 1]; // Twice the size for hexadecimal representation
+
+    for (i = 0; ; i++) {
+        unsigned long long key;
+        unsigned char hash[SHA256_DIGEST_LENGTH];
+        char concat[256]; // Assuming maximum 256 bytes for concatenation
+        snprintf(concat, sizeof(concat), "%s%d", _seed, i);
+        SHA256((const unsigned char*)concat, strlen(concat), hash);
+
+        // Convert hash to unsigned long long (for simplicity, consider first 8 bytes)
+        key = *((unsigned long long*)hash);
+
+        if (key < limit) {
+            // Return key as hexadecimal string
+            char* result = (char*)malloc(17);
+            snprintf(result, 17, "%llx", (key % strtoull(CURVE_ORDER, NULL, 16)));
+            return result;
+        }
+        if (i == 100000)
+            exit(EXIT_FAILURE); // Throw error if limit exceeded
+    }
+}
 
 int main() {
     // *****************starknet g testnet details**********************//
@@ -20,43 +73,20 @@ int main() {
     // const char* passphrase = "";
     // pubkey_len = 33; // uncompressed
 
-    // get stark seed from bip39 (24 words) 
+    // get stark seed from bip39 (12 words) 
     const char* mnemonic = "road donate inch warm beyond sea wink shoot fashion gain put vocal";
     const char* passphrase = "";
 
     get_seed(mnemonic, passphrase, seed);
 
-    // Constants for HD path
-    #define PURPOSE     0x8000002C  // 44
-    #define COIN_TYPE   0x8000003C  // 60 Ethereum
-    #define ACCOUNT     0x80000000 
-    #define CHANGE      0x00000000
-    #define ADDRESS_IDX 0x00000000
+    uint32_t bip32path[5] = {0x80000000 + 44, 0x80000000 + 60, 0x80000000, 0, 0};
 
-    memzero(seed, seed_len);
-    memzero(public_key, pubkey_len);
-    memzero(private_key, privkey_len);
-    memzero(address, addr_len);
+    // get_public_key(seed, bip32path, private_key, privkey_len);
 
+    
 
-    printf("\nPATH=m/40'/60'/0'/0/0\n");
-    get_keys(seed, seed_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX, node);
-
-    // Constants for HD path m / purpose' / coin_type' / account' / change / address_index
-    #define PURPOSE     0x8000002C  // 44
-    #define COIN_TYPE   0x8000232C  // 9004 Starknet
-    #define ACCOUNT     0x80000000
-    #define CHANGE      0x00000000
-    #define ADDRESS_IDX 0x00000000
-
-    memzero(seed, seed_len);
-    memzero(public_key, pubkey_len);
-    memzero(private_key, privkey_len);
-    memzero(address, addr_len);
-
-    printf("\nPATH=m/40'/9004'/0'/0/0\n");
-    print_arr("1122", node.private_key, privkey_len);
-    get_keys(&node.private_key, privkey_len, PURPOSE, COIN_TYPE, ACCOUNT, CHANGE, ADDRESS_IDX, node);
+    // print_arr("private key", private_key, privkey_len); 
+    // **************** get public key ********************************//
 
     // ***************when coins in account****************************//
 

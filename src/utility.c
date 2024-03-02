@@ -87,7 +87,7 @@ void get_keys(const char *seed, const size_t seed_len,
               uint32_t purpose, uint32_t coin_type, uint32_t account, uint32_t change, uint32_t address_idx, 
               HDNode node) {
    
-    hdnode_from_seed(seed, seed_len, STARK256_NAME, &node);
+    hdnode_from_seed(seed, seed_len, "secp256k1", &node);
     // hdnode_fill_public_key(&node);
     // compare_keys("Master_pubkey", node.public_key, m_pubkey, pubkey_len);
     // compare_keys("Master_chaincode", node.chain_code, m_chaincode, privkey_len); 
